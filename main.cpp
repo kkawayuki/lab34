@@ -6,26 +6,30 @@
 #include <stack>
 using namespace std;
 
-const int SIZE = 7;
+const int SIZE = 10; // Updated size to include new nodes
 
-struct Edge {
+struct Edge
+{
     int src, dest, weight;
 };
 
 typedef pair<int, int> Pair; // Creates alias 'Pair' for the pair<int,int> datatype
 
-class Graph {
+class Graph
+{
 public:
     // a vector of vectors of Pairs to represent an adjacency list
     vector<vector<Pair>> adjList;
 
     // Graph Constructor
-    Graph(vector<Edge> const &edges) {
+    Graph(vector<Edge> const &edges)
+    {
         // resize the vector to hold SIZE elements of type vector<Edge>
         adjList.resize(SIZE);
 
         // add edges to the directed graph
-        for (auto &edge : edges) {
+        for (auto &edge : edges)
+        {
             int src = edge.src;
             int dest = edge.dest;
             int weight = edge.weight;
@@ -39,9 +43,11 @@ public:
     }
 
     // Print the graph's adjacency list
-    void printGraph() {
+    void printGraph()
+    {
         cout << "Graph's adjacency list:" << endl;
-        for (int i = 0; i < adjList.size(); i++) {
+        for (int i = 0; i < adjList.size(); i++)
+        {
             cout << i << " --> ";
             for (Pair v : adjList[i])
                 cout << "(" << v.first << ", " << v.second << ") ";
@@ -50,7 +56,8 @@ public:
     }
 
     // Depth-First Search (DFS)
-    void DFS(int start) {
+    void DFS(int start)
+    {
         vector<bool> visited(SIZE, false);
         stack<int> stack;
 
@@ -59,18 +66,21 @@ public:
 
         cout << "DFS starting from vertex " << start << ":\n";
 
-        while (!stack.empty()) {
+        while (!stack.empty())
+        {
             int node = stack.top();
             stack.pop();
 
             // If not visited, process the node
-            if (!visited[node]) {
+            if (!visited[node])
+            {
                 cout << node << " ";
                 visited[node] = true;
             }
 
             // Add all adjacent nodes to the stack
-            for (auto &neighbor : adjList[node]) {
+            for (auto &neighbor : adjList[node])
+            {
                 int next = neighbor.first;
                 if (!visited[next])
                     stack.push(next);
@@ -80,7 +90,8 @@ public:
     }
 
     // Breadth-First Search (BFS)
-    void BFS(int start) {
+    void BFS(int start)
+    {
         vector<bool> visited(SIZE, false);
         queue<int> queue;
 
@@ -90,16 +101,19 @@ public:
 
         cout << "BFS starting from vertex " << start << ":\n";
 
-        while (!queue.empty()) {
+        while (!queue.empty())
+        {
             int node = queue.front();
             queue.pop();
 
             cout << node << " ";
 
             // Add all unvisited adjacent nodes to the queue
-            for (auto &neighbor : adjList[node]) {
+            for (auto &neighbor : adjList[node])
+            {
                 int next = neighbor.first;
-                if (!visited[next]) {
+                if (!visited[next])
+                {
                     queue.push(next);
                     visited[next] = true;
                 }
@@ -109,19 +123,21 @@ public:
     }
 };
 
-int main() {
+int main()
+{
     // Creates a vector of graph edges/weights
     vector<Edge> edges = {
         // (x, y, w) —> edge from x to y having weight w
         {0, 1, 12},
-        {0, 2, 8},
-        {0, 3, 21},
-        {2, 3, 6},
-        {2, 6, 2},
-        {5, 6, 6},
-        {4, 5, 9},
-        {2, 4, 4},
-        {2, 5, 5}};
+        {0, 2, 9},
+        {1, 3, 7},
+        {2, 4, 14},
+        {3, 5, 11},
+        {4, 6, 8},
+        {5, 7, 10},
+        {6, 8, 13},
+        {7, 9, 15},
+        {8, 9, 6}};
 
     // Creates graph
     Graph graph(edges);
