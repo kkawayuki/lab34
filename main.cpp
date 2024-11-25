@@ -5,6 +5,7 @@
 #include <queue>
 #include <stack>
 #include <unordered_map>
+#include <climits>
 using namespace std;
 
 const int SIZE = 10; // Updated size to include airports
@@ -45,6 +46,43 @@ public:
         }
     }
 
+    // Dijkstra's Algorithm for Shortest Path
+    void dijkstra(int start) {
+        vector<int> dist(SIZE, INT_MAX); // Initialize distances to infinity
+        vector<int> parent(SIZE, -1);    // Store parent nodes to reconstruct the path
+        priority_queue<Pair, vector<Pair>, greater<Pair>> pq; // Min-heap priority queue
+
+        dist[start] = 0;  // Distance to the start node is 0
+        pq.push(make_pair(0, start)); // Push the starting node into the priority queue
+
+        while (!pq.empty()) {
+            int u = pq.top().second;
+            pq.pop();
+
+            // Process each neighbor of u
+            for (auto &neighbor : adjList[u]) {
+                int v = neighbor.first;
+                int weight = neighbor.second;
+
+                // If a shorter path is found
+                if (dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+                    parent[v] = u;  // Store the path
+                    pq.push(make_pair(dist[v], v));
+                }
+            }
+        }
+
+        // Print the shortest paths from the start node to all other nodes
+        cout << "\nShortest Paths from " << airportNames[start] << ":\n";
+        for (int i = 0; i < SIZE; i++) {
+            if (i != start) {
+                cout << airportNames[start] << " to " << airportNames[i] 
+                     << " : " << dist[i] << " km" << endl;
+            }
+        }
+    }
+
     // Print the graph's adjacency list
     void printGraph() {
         cout << "Flight Network (Adjacency List Representation):" << endl;
@@ -65,7 +103,7 @@ public:
         stack.push(start);
 
         cout << "\nDFS starting from " << airportNames[start] << ":\n";
-        cout << "Route exploration order from LA:\n";
+        cout << "Route exploration order:\n";
 
         vector<string> visitedOrder;
 
@@ -102,7 +140,7 @@ public:
         visited[start] = true;
 
         cout << "\nBFS starting from " << airportNames[start] << ":\n";
-        cout << "Closest airports relative to LA, ordered:\n";
+        cout << "Closest airports visit order:\n";
 
         vector<string> visitedOrder;
 
@@ -155,6 +193,9 @@ int main() {
 
     // Perform BFS starting from Los Angeles
     graph.BFS(0);
+
+    // Calculate the shortest paths from Los Angeles (LAX) to other airports
+    graph.dijkstra(0);
 
     return 0;
 }
