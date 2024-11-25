@@ -94,6 +94,42 @@ public:
         }
     }
 
+    // Minimum Spanning Tree (MST) using Prim's Algorithm
+    void minimumSpanningTree(int start) {
+        vector<int> key(SIZE, INT_MAX); // Key values to pick minimum weight edge
+        vector<bool> inMST(SIZE, false); // To check if a node is in MST
+        priority_queue<Pair, vector<Pair>, greater<Pair>> pq; // Min-heap priority queue
+
+        key[start] = 0; // Start from node `start`
+        pq.push(make_pair(0, start));
+
+        cout << "\nMinimum Spanning Tree edges:" << endl;
+
+        while (!pq.empty()) {
+            int u = pq.top().second;
+            pq.pop();
+
+            // Skip nodes already included in MST
+            if (inMST[u]) continue;
+
+            inMST[u] = true;
+
+            // Explore all neighbors of u
+            for (auto &neighbor : adjList[u]) {
+                int v = neighbor.first;
+                int weight = neighbor.second;
+
+                // If v is not in MST and weight of (u, v) is less than current key[v]
+                if (!inMST[v] && weight < key[v]) {
+                    key[v] = weight;
+                    pq.push(make_pair(key[v], v));
+                    cout << "Edge from " << airportNames[u] << " to " << airportNames[v]
+                         << " with capacity: " << weight << " km" << endl;
+                }
+            }
+        }
+    }
+
     // Depth-First Search (DFS)
     void DFS(int start) {
         vector<bool> visited(SIZE, false);
@@ -196,6 +232,9 @@ int main() {
 
     // Calculate the shortest paths from Los Angeles (LAX) to other airports
     graph.dijkstra(0);
+
+    // Calculate the Minimum Spanning Tree from Los Angeles (LAX)
+    graph.minimumSpanningTree(0);
 
     return 0;
 }
